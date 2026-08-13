@@ -44,3 +44,21 @@ desktop.ini
 
 # Local agent state
 .agents/
+# Secret Guard: credentials and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Secret Guard: databases and backups
+*.db
+*.db-*
+*.sqlite
+*.sqlite3
+*.bak
+*.bak-*
+*.backup
+*.dump
+backups/
