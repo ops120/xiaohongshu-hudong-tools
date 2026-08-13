@@ -144,33 +144,60 @@ Computer Use 是通用“手”，CDP 是通用“遥控器”，本工具是给
 
 ## 安装
 
-### 1. 安装 Python 依赖
+### 1. 用自然语言安装整个项目（推荐）
+
+**把下面这段话直接发送给 Claude Code、Codex、OMP 或 OpenCode**，Agent 会自动识别操作系统、执行全部安装步骤并报告结果：
+
+> 请在这个项目的根目录完成安装，所有文件只允许放在项目目录内，禁止全局安装、禁止使用 conda：
+>
+> 1. **Python 环境**：用官方 python.org 的 Python 3.10+ 在项目内创建 `.venv`，pip 缓存指向 `.local/pip-cache`，然后安装 `requirements.txt`；运行和验证都用 `.venv` 里的 Python，不要动系统 Python；
+> 2. **BrowserMCP**：克隆 https://github.com/Smotree/BrowserMCP.git 到项目内的 `.local/BrowserMCP`，在其目录下运行 npm 安装（npm 缓存指向项目根的 `.local/npm-cache`，注意 `../` 相对路径，不要嵌套进 `.local/BrowserMCP` 内部）并构建；
+> 3. **启动服务**：在 `.local/BrowserMCP` 目录启动服务（`node server/dist/index.js`），访问 http://localhost:12800/health 确认返回 `{"status":"ok","connected":true}`；
+> 4. **创建配置**：从 `config.example.json` 复制一份 `config.json`（不要修改 example 模板）；
+> 5. 完成后用中文报告：`.venv` 与依赖是否就绪、BrowserMCP 安装路径与构建是否成功、服务是否连通、`config.json` 是否已创建，以及剩下的手动步骤是什么。
+
+**剩下的 2 步必须手动完成**（浏览器相关操作无法由脚本完成）：
+
+1. 加载扩展：`chrome://extensions` → 启用开发者模式 → “加载已解压的扩展程序” → 选 `.local/BrowserMCP/extension/` → 点击图标确认 badge 为绿色 `ON`；
+2. 用 Chrome 打开 <https://www.xiaohongshu.com> 完成登录。
+
+**自然语言日常运维**（同样直接发给 Agent）：
+
+- **启动服务**："在 `.local/BrowserMCP` 目录启动 BrowserMCP 服务，访问 http://localhost:12800/health 确认连通，告诉我是 ok 还是失败、失败原因是什么。"
+- **停止服务**："停止 BrowserMCP 服务：杀掉占用 12800 端口的所有 node 进程，确认端口已释放。"
+- **重新安装 / 更新 BrowserMCP**："更新项目内的 BrowserMCP：先停止 12800 端口的 node 服务进程，删除 `.local/BrowserMCP` 目录，重新克隆 https://github.com/Smotree/BrowserMCP.git 并安装依赖、构建、启动服务、验证 health。完成后提醒我在 `chrome://extensions` 中删除旧扩展并重新加载。"
+
+### 2. 手动安装
+
+只有 Agent 无法自动完成时才需要手动操作。
+
+**依赖红线**：
+- 所有依赖、缓存、构建产物**只允许放在项目目录内**，禁止散落到 C 盘系统目录或全局环境；
+- Python 依赖只装项目内 `.venv`（用官方 python.org Python 创建，运行用 `.venv\Scripts\python.exe`）；**禁止使用 conda**，禁止在系统 Python / 全局环境安装本项目依赖；
+- Node 依赖只装项目内 `node_modules`（BrowserMCP 在 `.local/BrowserMCP/`，即 `.local/BrowserMCP/node_modules`）；**禁止全局安装**（`npm install -g`）；
+- 运行时输出 `output/`、日志 `logs/`、`.venv/`、`.local/`（含 BrowserMCP）均已被 `.gitignore` 排除，**永不进 git**。
+
+#### 2.1 Python 依赖
 
 ```powershell
 # Windows PowerShell
 python -m venv .venv
 .venv\Scripts\activate
-pip install -r requirements.txt
+pip install --cache-dir .local/pip-cache -r requirements.txt
 ```
 
-> **依赖红线**：
-> - 所有依赖、缓存、构建产物**只允许放在项目目录内**，禁止散落到 C 盘系统目录或全局环境；
-> - Python 依赖只装项目内 `.venv`（用官方 python.org Python 创建，运行用 `.venv\Scripts\python.exe`）；**禁止使用 conda**，禁止在系统 Python / 全局环境安装本项目依赖；
-> - Node 依赖只装项目内 `node_modules`（BrowserMCP 在 `.local/BrowserMCP/`，即 `.local/BrowserMCP/node_modules`）；**禁止全局安装**（`npm install -g`）；
-> - pip/npm 缓存可指向项目内目录：`pip install --cache-dir .local/pip-cache ...`、`npm install --cache .local/npm-cache`；
-> - 运行时输出 `output/`、日志 `logs/`、`.venv/`、`.local/`（含 BrowserMCP）均已被 `.gitignore` 排除，**永不进 git**。
-
-### 2. 安装 BrowserMCP
+#### 2.2 BrowserMCP
 
 `.local/BrowserMCP/` 是独立第三方仓库，不包含在本项目 Git 历史中：
 
 ```powershell
-# Windows PowerShell
+# Windows PowerShell（在项目根目录执行）
 New-Item -ItemType Directory -Force .local | Out-Null
 git clone https://github.com/Smotree/BrowserMCP.git .local/BrowserMCP
 Set-Location .local/BrowserMCP
-npm install
+npm install --cache ../npm-cache
 npm run build
+node server/dist/index.js    # 启动服务（保持窗口打开）
 Set-Location ../..
 ```
 
@@ -178,17 +205,21 @@ Set-Location ../..
 # Git Bash
 mkdir -p .local
 git clone https://github.com/Smotree/BrowserMCP.git .local/BrowserMCP
-cd .local/BrowserMCP && npm install && npm run build && cd ../..
+cd .local/BrowserMCP && npm install --cache ../npm-cache && npm run build && cd ../..
+cd .local/BrowserMCP && node server/dist/index.js   # 启动服务
 ```
 
-然后打开 `chrome://extensions`：
+> **注意**：`--cache ../npm-cache` 的 `../` 是相对 `.local/BrowserMCP/` 的，指向项目根 `.local/npm-cache`；不要写成 `--cache .local/npm-cache`，否则会嵌套进 `.local/BrowserMCP/.local/`。
+>
+> 启动服务必须保持工作目录在 `.local/BrowserMCP`；停止时按 `Ctrl+C`，或杀掉占用 12800 端口的进程：
+>
+> ```powershell
+> Get-NetTCPConnection -LocalPort 12800 | Select-Object -ExpandProperty OwningProcess | ForEach-Object { Stop-Process -Id $_ -Force }
+> ```
+>
+> 重新安装 / 更新：停止服务 → `Remove-Item -LiteralPath .local/BrowserMCP -Recurse -Force` → 重新执行以上命令 → 重新加载扩展。
 
-1. 启用开发者模式；
-2. 选择“加载已解压的扩展程序”；
-3. 选择 `.local/BrowserMCP/extension/`；
-4. 点击扩展图标，确认 badge 为绿色 `ON`。
-
-### 3. 创建本地配置
+#### 2.3 创建本地配置
 
 ```bash
 # Windows cmd
@@ -201,6 +232,11 @@ cp config.example.json config.json
 按实际需求编辑 `config.json`。该文件已被 `.gitignore` 排除，不应提交真实运行参数或账号相关信息。
 
 ## 使用
+
+**两种用法，任选其一：**
+
+- **自然语言**（推荐）：把需求直接说给 Agent（Claude Code、Codex、OMP 或 OpenCode），它会自动改配置、跑脚本、报告结果。标准话术见 **[自然语言操作手册（NL_USAGE.md）](NL_USAGE.md)**；
+- **命令行**：手动运行脚本，见下方「开始前」与脚本命令。
 
 开始前：
 
