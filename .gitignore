@@ -1,0 +1,46 @@
+# Local configuration and credentials
+config.json
+.env
+.env.*
+!.env.example
+*.cookie
+*.cookies
+*storage-state*.json
+
+# Local dependencies, backups, archives (BrowserMCP, config backups, temp files)
+.local/
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+env/
+
+# Node.js / BrowserMCP build dependencies
+node_modules/
+
+# Runtime output
+output/*
+!output/.gitkeep
+logs/*
+!logs/.gitkeep
+
+# Playwright MCP runtime logs (transient, regeneratable)
+.playwright-mcp/
+
+# Editor / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local agent state
+.agents/

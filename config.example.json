@@ -1,0 +1,237 @@
+{
+  "channels": [
+    {
+      "name": "推荐",
+      "note_count": 5
+    },
+    {
+      "name": "穿搭",
+      "note_count": 5
+    }
+  ],
+  "min_likes": 100,
+  "max_comments": 5,
+  "output_file": "output/xhs-comments-filtered.xlsx",
+  "max_scroll_attempts": 40,
+  "browse": {
+    "scroll_px_range": [
+      300,
+      700
+    ],
+    "scroll_pause_range": [
+      1.5,
+      3.0
+    ],
+    "scrolls_per_attempt": [
+      1,
+      2
+    ],
+    "read_time_range": [
+      4.0,
+      8.0
+    ],
+    "page_load_wait_range": [
+      1.5,
+      2.5
+    ],
+    "gap_range": [
+      1.0,
+      2.0
+    ],
+    "attracted_pause_prob": 0.1,
+    "attracted_pause_range": [
+      3.0,
+      5.0
+    ],
+    "channel_switch_delay_range": [
+      1.5,
+      3.0
+    ],
+    "comment_scroll_step_range": [
+      200,
+      500
+    ],
+    "http_timeout": 60
+  },
+  "collect": {
+    "hot_mode": true,
+    "hot_comment_scroll_count": 6,
+    "hot_weight_likes": 3,
+    "hot_weight_replies": 1,
+    "max_fail_streak": 3,
+    "back_delay_range": [
+      0.8,
+      2.0
+    ],
+    "get_sub_comments": false,
+    "expand_replies_wait_range": [
+      1.0,
+      2.0
+    ],
+    "sub_comment_extract_passes": 2
+  },
+  "reply": {
+    "count": 3,
+    "comment_texts": [
+      "感谢分享"
+    ],
+    "interval_range": [
+      30,
+      90
+    ],
+    "rest_every": 5,
+    "rest_range": [
+      120,
+      300
+    ],
+    "think_range": [
+      1.5,
+      3.0
+    ],
+    "type_char_range": [
+      0.3,
+      0.8
+    ],
+    "type_pause_prob": 0.15,
+    "type_pause_range": [
+      0.8,
+      1.5
+    ],
+    "review_range": [
+      1.2,
+      2.5
+    ],
+    "after_send_range": [
+      2.0,
+      4.0
+    ],
+    "back_delay_range": [
+      1.0,
+      2.5
+    ],
+    "modal_poll_interval_range": [
+      0.3,
+      1.0
+    ],
+    "modal_poll_max": 20,
+    "download_covers": true,
+    "cover_dir": "output/covers",
+    "cover_timeout": 15,
+    "cover_max_size_mb": 5,
+    "output_file": "output/xhs-reply-log.xlsx",
+    "owner_comment": {
+      "enabled": false,
+      "keywords": [
+        "<定向评论关键词>"
+      ],
+      "count": 1,
+      "comment_texts": [
+        "请问这个体验怎么样呀？最近也在考虑这个～"
+      ],
+      "min_likes": 1,
+      "sort_by": "latest",
+      "done_file": "output/xhs-owner-comment-done.json",
+      "owner_markers": [
+        "<目标作者标记词>"
+      ],
+      "dealer_markers": [
+        "<经销商标记词>"
+      ],
+      "max_tries": 20
+    }
+  },
+  "like": {
+    "channels": [
+      {
+        "name": "推荐",
+        "count": 10
+      }
+    ],
+    "search_keywords": [
+      {
+        "keyword": "<搜索关键词>",
+        "count": 10
+      }
+    ],
+    "download_covers": true,
+    "cover_dir": "output/covers",
+    "cover_timeout": 15,
+    "cover_max_size_mb": 5,
+    "max_attempts": 30,
+    "read_time_range": [
+      4.0,
+      8.0
+    ],
+    "gap_range": [
+      5.0,
+      15.0
+    ],
+    "rest_every": 10,
+    "rest_range": [
+      120,
+      300
+    ],
+    "refresh_every_range": [
+      30,
+      50
+    ],
+    "output_file": "output/xhs-like-log.xlsx",
+    "close_modal_delay_range": [
+      1.0,
+      2.5
+    ],
+    "back_delay_range": [
+      0.8,
+      2.0
+    ],
+    "modal_poll_interval_range": [
+      0.3,
+      1.0
+    ],
+    "modal_poll_max": 20,
+    "scroll_top_attempts": 8,
+    "refresh_retry_max": 10
+  },
+  "privacy": {
+    "mask_nickname": false,
+    "anonymize_user_id": false
+  },
+  "search": {
+    "keywords": [
+      "<搜索关键词>"
+    ],
+    "sort_by": "latest",
+    "cutoff_days": 90,
+    "min_likes": 0,
+    "max_likes": null,
+    "exclude_author_substrings": [
+      "<排除作者子串>"
+    ],
+    "dealer_patterns": [
+      "<经销商识别词>"
+    ],
+    "max_notes_per_keyword": 50,
+    "output_file": "output/xhs-search.xlsx",
+    "scroll_pause_range": [
+      2.5,
+      4.0
+    ],
+    "keyword_gap_range": [
+      25,
+      45
+    ],
+    "http_timeout": 60,
+    "screen_scroll": {
+      "enabled": true,
+      "first_rounds_range": [
+        7,
+        15
+      ],
+      "refresh_between": true,
+      "second_rounds_range": [
+        5,
+        8
+      ]
+    }
+  }
+}
