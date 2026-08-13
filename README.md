@@ -101,6 +101,20 @@ xiaohongshu-hudong-tools/
 | `privacy.py` | 昵称掩码 + 用户 ID 匿名哈希 |
 | `exceptions.py` / `exception_map.py` | 异常体系：`MCPDownError` 等 + 错误码→中文提示映射 |
 
+### 与常见替代方案的对比
+
+**一句话**：Computer Use 是“AI 看屏幕猜按钮去点”，本工具是“脚本直接操作你已登录的浏览器”，裸 CDP 是中间那条路但容易被风控。
+
+| | ChatGPT Computer Use | 裸 CDP（Playwright 等） | 本工具 |
+|---|---|---|---|
+| 控制方式 | 截图 + 视觉推理 + 模拟点击 | 调试端口发指令 | Chrome 扩展 API 桥接 |
+| 登录态 | 需独立环境重搞 | 新 profile，无登录态 | **直接复用已登录的 Chrome** |
+| 风控特征 | 屏幕级，无浏览器痕迹 | webdriver 特征明显 | 无调试特征，像真人操作 |
+| 速度 / 成本 | 慢、贵（按步计费） | 快 | 快 |
+| 拟人化 + 业务逻辑 | 无 | 无 | **有**（随机节奏 / 已赞去重 / 定向评论 / Excel 导出） |
+
+Computer Use 是通用“手”，CDP 是通用“遥控器”，本工具是给小红书养号定制的“代练”。
+
 ## 工作原理 (How It Works)
 
 1. **控制链路**：脚本通过 `send_cmd` 向 BrowserMCP（localhost:12800）发 `{action, params}`；Server 经 WebSocket 转发给 Chrome 扩展；扩展用 `chrome.*` API 操作**用户已登录的真实 Chrome**，全程走 DOM，不碰反爬签名。
