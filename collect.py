@@ -465,7 +465,7 @@ def is_modal_open():
             'code': '(() => { const m = document.querySelector(".note-detail-mask"); if (!m) return false; const r = m.getBoundingClientRect(); return r.width > 300 && r.height > 300; })()'
         })
         return bool(r.get('result'))
-    except:
+    except (MCPDownError, json.JSONDecodeError):
         return False
 
 def switch_channel(name):
